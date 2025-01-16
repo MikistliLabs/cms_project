@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('content');
-            $table->string('image');
+            $table->string('image')->nullable();;
             $table->smallInteger('status')->default(1);// 0 inactivo, 1 activo, 3 publicado
             $table->date('publish')->nullable();
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
