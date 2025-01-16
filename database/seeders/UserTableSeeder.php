@@ -18,7 +18,7 @@ class UserTableSeeder extends Seeder
             [
                 'name' => 'Admin',
                 'email' => 'admin@example.com',
-                'password' => bcrypt('12345'),
+                'password' => bcrypt('123456789'),
                 'role_id' => 1
             ]
         ]);
