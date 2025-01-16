@@ -11,6 +11,8 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+    protected $connection = 'pgsql_write';
+    protected $table = 'users';
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +23,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id',
+        'status'
     ];
 
     /**
@@ -44,5 +48,26 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }// Obtener artículos paginados
+    public static function getPaginatedUsers($perPage = 5){
+        return self::on('pgsql_read')->where('status', '!=', 0)->paginate($perPage);
+    }
+    public static function createUsuario($data){
+        $data['password'] = bcrypt($data['password']);
+        $data['role_id'] = $data['role_id'];
+        $data['created_by'] = 1;
+
+        return self::on('pgsql_write')->create($data);
+    }
+    public function updateUser($data, $id){
+        return self::on('pgsql_write')
+            ->where('id', $id)
+            ->update($data);
+    }
+    public function deleteUser($id){
+        $category = $this->on('pgsql_write')->findOrFail($id);
+        $category->update([
+            'status'=> 0,
+        ]);
     }
 }

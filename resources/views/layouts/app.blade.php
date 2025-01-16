@@ -14,9 +14,18 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" href="/articulos">Artículos</a></li>
                     @auth
-                        <li class="nav-item"><a class="nav-link" href="/admin/articles">Admin</a></li>
+                        @if(auth()->user()->role_id == 1)
+                            <li class="nav-item"><a class="nav-link" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                        @elseif(auth()->user()->role_id == 2)
+                            <li class="nav-item"><a class="nav-link" href="{{ route('public.articles.index') }}">Artículos</a></li>
+                        @endif
+                        <li class="nav-item">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="btn btn-link nav-link">Cerrar sesión</button>
+                            </form>
+                        </li>
                     @endauth
                 </ul>
             </div>
