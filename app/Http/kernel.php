@@ -33,5 +33,6 @@ class Kernel extends HttpKernel
         'auth' => \App\Http\Middleware\Authenticate::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'user.final' => \App\Http\Middleware\UserFinalMiddleware::class,
+        
     ];
 }
