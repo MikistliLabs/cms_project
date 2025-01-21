@@ -5,9 +5,12 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
-// use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LoginController;
 
-Auth::routes();
+// Auth::routes();
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:3,1');;
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
     Route::get('/', function () {
         return redirect('/login');
@@ -18,8 +21,7 @@ Auth::routes();
         Route::get('/articulo/{id}', [ArticleController::class, 'showArticulos'])->name('articles.show');
     });
     // Rutas para ADMINISTRADORES
-    Route::middleware(['auth'])->group(function () {
-        //Rutas de usuario final
+    Route::middleware(['auth',])->group(function () {
         //rutas de admin
         Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
         //Rutas para el manejo del CRUD de articulos

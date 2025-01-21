@@ -1,138 +1,66 @@
-# CMS - Documentación e Instalación
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-## Descripción
+<p align="center">
+<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
 
-Este proyecto es un CMS desarrollado en PHP con Laravel, diseñado para la gestión eficiente de contenido. Permite la administración de usuarios, roles, permisos y contenido dinámico. Además, incluye integración con  subida de archivos.
+## About Laravel
 
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-## Requisitos Previos
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Antes de instalar el proyecto, asegúrate de contar con los siguientes requisitos:
+Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-- PHP >= 8.0
-- Composer
-- MySQL o PostgreSQL
-- Laravel 10+
-- Extensiones PHP necesarias: OpenSSL, pgsql, PDO, Mbstring, Tokenizer, XML, GD
-- Servidor Apache o Nginx con soporte para mod\_rewrite
+## Learning Laravel
 
-## Instalación
+Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-### 1. Clonar el repositorio
+You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-```bash
-git clone https://github.com/usuario/repo-cms.git
-cd repo-cms
-```
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-### 2. Instalar dependencias
+## Laravel Sponsors
 
-```bash
-composer install
-```
+We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
 
-### 3. Configuración del entorno
+### Premium Partners
 
-```bash
-cp .env.example .env
-php artisan key:generate
-```
-# Base de datos
-Creación del esquema y usuarios requeridos
+- **[Vehikl](https://vehikl.com/)**
+- **[Tighten Co.](https://tighten.co)**
+- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+- **[64 Robots](https://64robots.com)**
+- **[Cubet Techno Labs](https://cubettech.com)**
+- **[Cyber-Duck](https://cyber-duck.co.uk)**
+- **[Many](https://www.many.co.uk)**
+- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
+- **[DevSquad](https://devsquad.com)**
+- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
+- **[OP.GG](https://op.gg)**
+- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
+- **[Lendio](https://lendio.com)**
 
-create databaste cms;
-CREATE USER reader WITH ENCRYPTED PASSWORD 'reader_pass';
-CREATE USER writer WITH ENCRYPTED PASSWORD 'writer_pass';
-GRANT CONNECT ON DATABASE cms TO reader,writer;
-Una ves conectados al esquema cms asignaremos los respectivos permisos a los usuarios
--- asignación de permisos de lectura
-GRANT USAGE ON SCHEMA public TO reader;
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO reader;
-ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO reader;
+## Contributing
 
--- asignación de permisos de escritura
-GRANT USAGE, CREATE ON SCHEMA public TO writer;
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO writer;
-ALTER DEFAULT PRIVILEGES IN SCHEMA public 
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO writer;
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-Configura las credenciales de la base de datos en el archivo `.env`. Se ocuparon 3 usuarios 1 superadministrador para realizar las migraciones correspondientes y los usuarios soplicitad en la prueba para las distintas operaciones.
+## Code of Conduct
 
-DB_USERNAME_ADMIN=postgres
-DB_PASSWORD_ADMIN=AdminR00t
+In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-DB_USERNAME_WRITE=writer
-DB_PASSWORD_WRITE=writer_pass
+## Security Vulnerabilities
 
-DB_USERNAME_READ=reader
-DB_PASSWORD_READ=reader_pass
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-### 4. Migraciones y Seeders
+## License
 
-```bash
-php artisan migrate --database=pgsql_admin
-```
--- Despues de ejecutar las migraciones se deberan asignar los permisos a las secuencias 
---al usuario de escritura
-GRANT USAGE, SELECT, UPDATE ON SEQUENCE users_id_seq TO writer;
-GRANT USAGE, SELECT, UPDATE ON SEQUENCE roles_id_seq TO writer;
-GRANT USAGE, SELECT, UPDATE ON SEQUENCE categories_id_seq TO writer;
-GRANT USAGE, SELECT, UPDATE ON SEQUENCE articles_id_seq TO writer;
-Despues se podran ejecutar los seeders con el usuario de escritura
-php artisan db:seed --database=pgsql_write
-
-
-### 5. Configuración de almacenamiento y enlaces simbólicos
-
-```bash
-php artisan storage:link
-```
-php artisan ui bootstrap --auth
-
-### 6. Servidor de desarrollo
-
-```bash
-php artisan serve
-```
-
-Accede a `http://127.0.0.1:8000` en tu navegador.
-
-
-## Configuración Adicional
-
-### Configuración de Sesión y Cache
-
-```ini
-SESSION_DRIVER=file
-CACHE_STORE=file
-QUEUE_CONNECTION=sync
-```
-
-### Integración de reCAPTCHA
-
-```ini
-RECAPTCHA_SITE_KEY=your_site_key
-RECAPTCHA_SECRET_KEY=your_secret_key
-```
-
-### Integración de Bootstrap
-
-```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-```
-
-### Paginación
-
-Para asegurarte de que los botones de paginación respeten los estilos de Bootstrap, agrega lo siguiente en `AppServiceProvider.php`:
-
-```php
-use Illuminate\Pagination\Paginator;
-
-public function boot()
-{
-    Paginator::useBootstrap();
-}
-```
-
-Esto permite que las vistas utilicen las clases de Bootstrap automáticamente.
-
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

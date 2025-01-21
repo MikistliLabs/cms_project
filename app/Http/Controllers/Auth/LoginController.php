@@ -38,29 +38,46 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        // Aplicar protección contra intentos fallidos
-        $this->limitaIntentos($request);
+        // Llave personalizada para el throttling
+        $throttleKey = strtolower($request->input('email')) . '|' . $request->ip();
+
+        // Verificar si hay demasiados intentos
+        if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($throttleKey, 3)) {
+            $seconds = \Illuminate\Support\Facades\RateLimiter::availableIn($throttleKey);
+
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'email' => ["Demasiados intentos. Intenta de nuevo en $seconds segundos."]
+            ])->status(429);
+        }
+
+        // Registrar el intento actual
+        \Illuminate\Support\Facades\RateLimiter::hit($throttleKey);
 
         // Validar los datos del formulario
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required|min:6',
+            'password' => 'required|min:5',
             'g-recaptcha-response' => !$this->isLocal() ? 'required' : '',
         ]);
 
         // Validar reCAPTCHA si no estamos en entorno local
         if (!$this->isLocal() && !$this->validateCaptcha($request)) {
-            throw ValidationException::withMessages([
+            throw \Illuminate\Validation\ValidationException::withMessages([
                 'g-recaptcha-response' => ['Verificación reCAPTCHA fallida. Intenta de nuevo.']
             ]);
         }
 
         // Intentar autenticar al usuario
         if ($this->attemptLogin($request)) {
+            // Limpiar los intentos al autenticar correctamente
+            \Illuminate\Support\Facades\RateLimiter::clear($throttleKey);
             return $this->sendLoginResponse($request);
         }
 
-        return $this->sendFailedLoginResponse($request);
+        // Si la autenticación falla, lanzar error
+        throw \Illuminate\Validation\ValidationException::withMessages([
+            'email' => ['Credenciales incorrectas.']
+        ]);
     }
 
     /**
@@ -83,7 +100,8 @@ class LoginController extends Controller
      */
     protected function limitaIntentos(Request $request)
     {
-        if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($this->throttleKey($request), 5)) {
+        // dd($request);
+        if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($this->throttleKey($request), 3)) {
             throw ValidationException::withMessages([
                 'email' => ['Demasiados intentos de inicio de sesión. Inténtalo más tarde.']
             ])->status(429);
