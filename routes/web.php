@@ -13,7 +13,7 @@ Auth::routes();
         return redirect('/login');
     });
     // Rutas para USUARIOS FINALES
-    Route::middleware(['auth', 'user.final'])->group(function () {
+    Route::middleware(['auth', 'user_final'])->group(function () {
         Route::get('/lista-articulos', [ArticleController::class, 'getArticulos'])->name('public.articles.index');
         Route::get('/articulo/{id}', [ArticleController::class, 'showArticulos'])->name('articles.show');
     });

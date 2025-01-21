@@ -32,7 +32,7 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
-        'user.final' => \App\Http\Middleware\UserFinalMiddleware::class,
-        
+        'user_final' => \App\Http\Middleware\UserFinalMiddleware::class,
+
     ];
 }
